@@ -14,12 +14,14 @@ auto HashTableUtilities::Insert(HashTable &hash_table) -> void {
 
   int_input = std::stoi(input);
 
-  hash_table.Insert(Item{int_input});
+  auto node = std::make_unique<Node>();
+  node->SetValue(std::move(std::make_unique<unsigned int>(int_input)));
+  hash_table.Insert(std::move(node));
 }
 
 auto HashTableUtilities::Find(const HashTable &hash_table, unsigned int value)
     -> void {
-  const Item *kItem{hash_table.Find(value)};
+  const auto *kItem{hash_table.Find(value)};
 
   if (kItem == nullptr) {
     std::cout << "The value " << value
@@ -28,7 +30,7 @@ auto HashTableUtilities::Find(const HashTable &hash_table, unsigned int value)
     return;
   }
 
-  std::cout << "Item with value " << value << " found at index "
+  std::cout << "Node with value " << value << " found at index "
             << "" << '\n';
 }
 
@@ -47,19 +49,40 @@ auto HashTableUtilities::PrintHashTable(const HashTable &hash_table) -> void {
   const int kColumnWidth{15};
 
   std::cout << std::setw(kColumnWidth) << std::left << "Hash"
-            << "Value" << '\n';
+            << "Values" << '\n';
 
   size_t index{0};
-  for (Item const &item : hash_table.GetItems()) {
-    if (item.GetValue() == nullptr) {
+  const auto *buckets = &hash_table.GetBuckets();
+
+  for (auto const &bucket : *buckets) {
+    if (bucket->GetFirstNode() == nullptr) {
       std::cout << std::setw(kColumnWidth) << std::left << index << "*" << '\n';
       ++index;
 
       continue;
     }
 
+    if (bucket->GetFirstNode()->GetNextNode() != nullptr) {
+      auto *current_node = bucket->GetFirstNode();
+
+      std::cout << std::setw(kColumnWidth) << std::left << index;
+
+      while (current_node->GetNextNode() != nullptr) {
+        std::cout << *current_node->GetValue() << " -> ";
+
+        current_node = current_node->GetNextNode();
+      }
+
+      std::cout << *current_node->GetValue() << '\n';
+
+      ++index;
+
+      continue;
+    }
+
     std::cout << std::setw(kColumnWidth) << std::left << index
-              << *item.GetValue() << '\n';
+              << *bucket->GetFirstNode()->GetValue() << '\n';
+
     ++index;
   }
 }

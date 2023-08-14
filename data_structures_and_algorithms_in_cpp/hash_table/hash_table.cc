@@ -1,54 +1,74 @@
 #include "hash_table.h"
 
+#include <iostream>
+
 namespace data_structures_and_algorithms_in_cpp::hash_table {
 
-HashTable::HashTable(unsigned int size)
-    : hash_table_size_{size}, items_{hash_table_size_, Item{}} {}
+HashTable::HashTable(unsigned int size) : hash_table_size_{size} {
+  buckets_ = std::make_unique<std::vector<std::unique_ptr<Bucket>>>();
+
+  buckets_->reserve(hash_table_size_);
+
+  for (auto i = 0; i < hash_table_size_; i++) {
+    buckets_->push_back(std::make_unique<Bucket>());
+  }
+}
 
 auto HashTable::GetHash(unsigned int value) const -> unsigned int {
   return value % hash_table_size_;
 }
 
-auto HashTable::Insert(Item item) -> void {
-  unsigned int hash{GetHash(*item.GetValue())};
+auto HashTable::Insert(std::unique_ptr<Node> node) -> void {
+  const unsigned int kHash{GetHash(*node->GetValue())};
 
-  while (items_[hash].GetValue() != nullptr) {
-    ++hash;
-    hash %= hash_table_size_;
+  if (buckets_->operator[](kHash)->GetFirstNode() == nullptr) {
+    buckets_->operator[](kHash)->SetFirstNode(std::move(node));
+
+    return;
   }
 
-  items_[hash] = item;
+  auto* current_node = buckets_->operator[](kHash)->GetFirstNode();
+
+  while (current_node->GetNextNode() != nullptr) {
+    current_node = current_node->GetNextNode();
+  }
+
+  current_node->SetNextNode(std::move(node));
 }
 
 auto HashTable::Remove(unsigned int value) -> bool {
   const unsigned int kHash{GetHash(value)};
-  const Item* kItem = Find(value);
+  const auto* kItem = Find(value);
 
   if (kItem == nullptr) {
     return false;
   }
 
-  items_[kHash].SetValue(nullptr);
+  buckets_->operator[](kHash)->GetFirstNode()->SetValue(nullptr);
 
   return true;
 }
 
-auto HashTable::Find(unsigned int value) const -> const Item* {
-  unsigned int hash{GetHash(value)};
-  const unsigned int* kValue{items_[hash].GetValue()};
+auto HashTable::Find(unsigned int value) const -> Node* {
+  const unsigned int kHash{GetHash(value)};
 
-  while (kValue != nullptr) {
-    if (*kValue == value) {
-      return &items_[hash];
+  auto* current_node = buckets_->operator[](kHash)->GetFirstNode();
+
+  while (current_node->GetNextNode() != nullptr) {
+    current_node = current_node->GetNextNode();
+
+    if (*current_node->GetValue() != value) {
+      continue;
     }
 
-    ++hash;
-    kValue = items_[hash].GetValue();
+    return current_node;
   }
 
   return nullptr;
 }
 
-auto HashTable::GetItems() const -> std::vector<Item> { return items_; }
+auto HashTable::GetBuckets() const -> std::vector<std::unique_ptr<Bucket>>& {
+  return *buckets_;
+}
 
 }  // namespace data_structures_and_algorithms_in_cpp::hash_table

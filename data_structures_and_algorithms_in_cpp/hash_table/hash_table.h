@@ -3,22 +3,24 @@
 
 #include <vector>
 
-#include "item.h"
+#include "bucket.h"
+#include "node.h"
 
 namespace data_structures_and_algorithms_in_cpp::hash_table {
 
 class HashTable {
  private:
   unsigned int hash_table_size_{0};
-  std::vector<Item> items_;
+  std::unique_ptr<std::vector<std::unique_ptr<Bucket>>> buckets_;
   [[nodiscard]] auto GetHash(unsigned int value) const -> unsigned int;
 
  public:
   explicit HashTable(unsigned int size);
-  auto Insert(Item item) -> void;
+  auto Insert(std::unique_ptr<Node> node) -> void;
   auto Remove(unsigned int value) -> bool;
-  [[nodiscard]] auto Find(unsigned int value) const -> const Item*;
-  [[nodiscard]] auto GetItems() const -> std::vector<Item>;
+  [[nodiscard]] auto Find(unsigned int value) const -> Node*;
+  [[nodiscard]] auto GetBuckets() const
+      -> std::vector<std::unique_ptr<Bucket>>&;
 };
 
 }  // namespace data_structures_and_algorithms_in_cpp::hash_table

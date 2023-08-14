@@ -2,7 +2,7 @@
 #define DATA_STRUCTURES_AND_ALGORITHMS_IN_CPP_DATA_STRUCTURES_AND_ALGORITHMS_IN_CPP_HASH_TABLE_UTILITIES_H_
 
 #include "hash_table.h"
-#include "item.h"
+#include "node.h"
 
 namespace data_structures_and_algorithms_in_cpp::hash_table {
 
