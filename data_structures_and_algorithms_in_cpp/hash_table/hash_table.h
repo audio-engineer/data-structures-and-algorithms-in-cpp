@@ -18,7 +18,8 @@ class HashTable {
   explicit HashTable(unsigned int size);
   auto Insert(std::unique_ptr<Node> node) -> void;
   auto Remove(unsigned int value) -> bool;
-  [[nodiscard]] auto Find(unsigned int value) const -> Node*;
+  [[nodiscard]] auto Find(unsigned int value) const
+      -> std::variant<Node*, std::tuple<Node*, Node*>>;
   [[nodiscard]] auto GetBuckets() const
       -> std::vector<std::unique_ptr<Bucket>>&;
 };

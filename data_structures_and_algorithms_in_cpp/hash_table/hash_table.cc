@@ -1,7 +1,5 @@
 #include "hash_table.h"
 
-#include <iostream>
-
 namespace data_structures_and_algorithms_in_cpp::hash_table {
 
 HashTable::HashTable(unsigned int size) : hash_table_size_{size} {
@@ -20,14 +18,14 @@ auto HashTable::GetHash(unsigned int value) const -> unsigned int {
 
 auto HashTable::Insert(std::unique_ptr<Node> node) -> void {
   const unsigned int kHash{GetHash(*node->GetValue())};
+  const auto& kBucket{buckets_->operator[](kHash)};
+  Node* current_node{kBucket->GetFirstNode()};
 
-  if (buckets_->operator[](kHash)->GetFirstNode() == nullptr) {
-    buckets_->operator[](kHash)->SetFirstNode(std::move(node));
+  if (current_node == nullptr) {
+    kBucket->SetFirstNode(std::move(node));
 
     return;
   }
-
-  auto* current_node = buckets_->operator[](kHash)->GetFirstNode();
 
   while (current_node->GetNextNode() != nullptr) {
     current_node = current_node->GetNextNode();
@@ -38,33 +36,59 @@ auto HashTable::Insert(std::unique_ptr<Node> node) -> void {
 
 auto HashTable::Remove(unsigned int value) -> bool {
   const unsigned int kHash{GetHash(value)};
-  const auto* kItem = Find(value);
+  const auto& kBuckets = *buckets_;
+  const auto kSearchResult{Find(value)};
 
-  if (kItem == nullptr) {
-    return false;
-  }
+  std::visit(
+      [&kBuckets, kHash](const auto& data) {
+        using T = std::decay_t<decltype(data)>;
 
-  buckets_->operator[](kHash)->GetFirstNode()->SetValue(nullptr);
+        if constexpr (std::is_same_v<T, Node*>) {
+          if (data != nullptr && kBuckets[kHash]->GetFirstNode() == data) {
+            kBuckets[kHash]->SetFirstNode(nullptr);
+          }
+        }
+
+        if constexpr (std::is_same_v<T, std::tuple<Node*, Node*>>) {
+          Node* previous_node{std::get<0>(data)};
+          Node* current_node{std::get<1>(data)};
+
+          if (previous_node != nullptr &&
+              current_node->GetNextNode() != nullptr) {
+            previous_node->SetNextNode(
+                std::move(current_node->GetNextNodeOwnership()));
+
+            return;
+          }
+
+          if (previous_node != nullptr) {
+            previous_node->SetNextNode(nullptr);
+          }
+        }
+      },
+      kSearchResult);
 
   return true;
 }
 
-auto HashTable::Find(unsigned int value) const -> Node* {
+auto HashTable::Find(unsigned int value) const
+    -> std::variant<Node*, std::tuple<Node*, Node*>> {
   const unsigned int kHash{GetHash(value)};
-
-  auto* current_node = buckets_->operator[](kHash)->GetFirstNode();
+  Node* current_node{buckets_->operator[](kHash)->GetFirstNode()};
+  Node* previous_node{nullptr};
 
   while (current_node->GetNextNode() != nullptr) {
+    previous_node = current_node;
     current_node = current_node->GetNextNode();
 
     if (*current_node->GetValue() != value) {
       continue;
     }
 
-    return current_node;
+    return std::tuple<Node*, Node*>{previous_node, current_node};
   }
 
-  return nullptr;
+  return current_node;
 }
 
 auto HashTable::GetBuckets() const -> std::vector<std::unique_ptr<Bucket>>& {

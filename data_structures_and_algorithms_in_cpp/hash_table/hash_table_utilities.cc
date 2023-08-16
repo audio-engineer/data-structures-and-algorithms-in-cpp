@@ -21,9 +21,24 @@ auto HashTableUtilities::Insert(HashTable &hash_table) -> void {
 
 auto HashTableUtilities::Find(const HashTable &hash_table, unsigned int value)
     -> void {
-  const auto *kItem{hash_table.Find(value)};
+  const auto kSearchResult = hash_table.Find(value);
+  Node *item{nullptr};
 
-  if (kItem == nullptr) {
+  std::visit(
+      [&item](auto &data) {
+        using T = std::decay_t<decltype(data)>;
+
+        if constexpr (std::is_same_v<T, Node *>) {
+          item = data;
+        }
+
+        if constexpr (std::is_same_v<T, std::tuple<Node *, Node *>>) {
+          item = std::get<1>(data);
+        }
+      },
+      kSearchResult);
+
+  if (item == nullptr) {
     std::cout << "The value " << value
               << " could not be found in the hash table." << '\n';
 

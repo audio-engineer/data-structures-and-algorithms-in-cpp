@@ -1,8 +1,6 @@
 #ifndef DATA_STRUCTURES_AND_ALGORITHMS_IN_CPP_DATA_STRUCTURES_AND_ALGORITHMS_IN_CPP_HASH_TABLE_BUCKET_H
 #define DATA_STRUCTURES_AND_ALGORITHMS_IN_CPP_DATA_STRUCTURES_AND_ALGORITHMS_IN_CPP_HASH_TABLE_BUCKET_H
 
-#include <memory>
-
 #include "node.h"
 
 namespace data_structures_and_algorithms_in_cpp::hash_table {

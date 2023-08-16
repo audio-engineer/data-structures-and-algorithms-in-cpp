@@ -17,6 +17,7 @@ class Node {
   [[nodiscard]] auto GetValue() const -> unsigned int*;
   auto SetNextNode(std::unique_ptr<Node> next_node) -> Node&;
   [[nodiscard]] auto GetNextNode() const -> Node*;
+  [[nodiscard]] auto GetNextNodeOwnership() -> std::unique_ptr<Node>;
 };
 
 }  // namespace data_structures_and_algorithms_in_cpp::hash_table
