@@ -1,5 +1,15 @@
 #include "hash_table.h"
 
+#include <memory>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+#include <vector>
+
+#include "bucket.h"
+#include "node.h"
+
 namespace data_structures_and_algorithms_in_cpp::hash_table {
 
 HashTable::HashTable(unsigned int size) : hash_table_size_{size} {
@@ -36,7 +46,7 @@ auto HashTable::Insert(std::unique_ptr<Node> node) -> void {
 
 auto HashTable::Remove(unsigned int value) -> bool {
   const unsigned int kHash{GetHash(value)};
-  const auto& kBuckets = *buckets_;
+  const auto& kBuckets{*buckets_};
   const auto kSearchResult{Find(value)};
 
   std::visit(
@@ -75,6 +85,11 @@ auto HashTable::Find(unsigned int value) const
     -> std::variant<Node*, std::tuple<Node*, Node*>> {
   const unsigned int kHash{GetHash(value)};
   Node* current_node{buckets_->operator[](kHash)->GetFirstNode()};
+
+  if (current_node == nullptr || *current_node->GetValue() != value) {
+    return nullptr;
+  }
+
   Node* previous_node{nullptr};
 
   while (current_node->GetNextNode() != nullptr) {

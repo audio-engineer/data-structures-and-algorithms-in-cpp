@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <map>
+#include <stdexcept>
 #include <string>
 #include <variant>
 
@@ -13,7 +14,7 @@ namespace data_structures_and_algorithms_in_cpp::hash_table {
 using FunctionVariants =
     std::variant<void (*)(const HashTable &), void (*)(HashTable &),
                  void (*)(const HashTable &, const unsigned int)>;
-using CommandDictionary = std::map<unsigned int, FunctionVariants>;
+using CommandDictionary = std::map<Commands, FunctionVariants>;
 
 auto HashTableApplication::NumericPrompt(const std::string &prompt_text)
     -> unsigned int {
@@ -65,38 +66,43 @@ auto HashTableApplication::Run() -> void {
   HashTable hash_table{NumericPrompt("Enter the size of the hash table: ")};
 
   CommandDictionary command_dictionary;
-  command_dictionary[1] = &HashTableUtilities::Insert;
-  command_dictionary[2] = &HashTableApplication::Remove;
-  command_dictionary[3] = &HashTableApplication::Find;
-  command_dictionary[4] = &HashTableUtilities::PrintHashTable;
+  command_dictionary[Commands::kInsert] = &HashTableUtilities::Insert;
+  command_dictionary[Commands::kRemove] = &HashTableApplication::Remove;
+  command_dictionary[Commands::kFind] = &HashTableApplication::Find;
+  command_dictionary[Commands::kPrint] = &HashTableUtilities::PrintHashTable;
 
   PrintMenu();
 
-  while (unsigned int const kCommand = NumericPrompt("Enter a command: ")) {
-    switch (kCommand) {
-      case 1: {
-        auto insert_command =
-            std::get<void (*)(HashTable &hash_table)>(command_dictionary[1]);
-        insert_command(hash_table);
+  while (const auto kCommand = NumericPrompt("Enter a command: ")) {
+    switch (static_cast<Commands>(kCommand)) {
+      case Commands::kInsert: {
+        const auto kInsertCommand = std::get<void (*)(HashTable &hash_table)>(
+            command_dictionary[Commands::kInsert]);
+        kInsertCommand(hash_table);
         break;
       }
-      case 2: {
-        auto Remove_command =
-            std::get<void (*)(HashTable &hash_table)>(command_dictionary[2]);
-        Remove_command(hash_table);
+      case Commands::kRemove: {
+        const auto kRemoveCommand = std::get<void (*)(HashTable &hash_table)>(
+            command_dictionary[Commands::kRemove]);
+        kRemoveCommand(hash_table);
         break;
       }
-      case 3: {
-        auto find_command = std::get<void (*)(const HashTable &hash_table)>(
-            command_dictionary[3]);
-        find_command(hash_table);
+      case Commands::kFind: {
+        const auto kFindCommand =
+            std::get<void (*)(const HashTable &hash_table)>(
+                command_dictionary[Commands::kFind]);
+        kFindCommand(hash_table);
         break;
       }
-      case 4: {
-        auto print_command = std::get<void (*)(const HashTable &hash_table)>(
-            command_dictionary[4]);
-        print_command(hash_table);
+      case Commands::kPrint: {
+        const auto kPrintCommand =
+            std::get<void (*)(const HashTable &hash_table)>(
+                command_dictionary[Commands::kPrint]);
+        kPrintCommand(hash_table);
         break;
+      }
+      case Commands::kQuit: {
+        return;
       }
       default:
         std::cout << "Invalid command." << '\n';
