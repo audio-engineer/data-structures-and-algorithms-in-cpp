@@ -1,5 +1,8 @@
 #include "node.h"
 
+#include <memory>
+#include <utility>
+
 namespace data_structures_and_algorithms_in_cpp::hash_table {
 
 Node::Node() : value_{nullptr}, next_node_{nullptr} {}

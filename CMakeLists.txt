@@ -1,17 +1,8 @@
-cmake_minimum_required(VERSION 3.26)
-project(data_structures_and_algorithms_in_cpp)
+cmake_minimum_required(VERSION 3.25)
+project(data_structures_and_algorithms_in_cpp CXX)
 
 set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_executable(data_structures_and_algorithms_in_cpp main.cc
-        data_structures_and_algorithms_in_cpp/hash_table/hash_table.cc
-        data_structures_and_algorithms_in_cpp/hash_table/hash_table.h
-        data_structures_and_algorithms_in_cpp/hash_table/node.cc
-        data_structures_and_algorithms_in_cpp/hash_table/node.h
-        data_structures_and_algorithms_in_cpp/hash_table/hash_table_utilities.cc
-        data_structures_and_algorithms_in_cpp/hash_table/hash_table_utilities.h
-        data_structures_and_algorithms_in_cpp/hash_table/hash_table_application.cc
-        data_structures_and_algorithms_in_cpp/hash_table/hash_table_application.h
-        data_structures_and_algorithms_in_cpp/hash_table/bucket.cc
-        data_structures_and_algorithms_in_cpp/hash_table/bucket.h
-)
+add_subdirectory(data_structures_and_algorithms_in_cpp/hash_table/)

@@ -1,5 +1,10 @@
 #include "bucket.h"
 
+#include <memory>
+#include <utility>
+
+#include "node.h"
+
 namespace data_structures_and_algorithms_in_cpp::hash_table {
 
 Bucket::Bucket() : first_node_{nullptr} {}

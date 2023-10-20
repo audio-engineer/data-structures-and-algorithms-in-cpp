@@ -1,7 +1,17 @@
 #include "hash_table_utilities.h"
 
+#include <cstddef>
 #include <iomanip>
 #include <iostream>
+#include <memory>
+#include <string>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+
+#include "hash_table.h"
+#include "node.h"
 
 namespace data_structures_and_algorithms_in_cpp::hash_table {
 
