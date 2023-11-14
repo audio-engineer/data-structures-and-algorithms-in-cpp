@@ -11,9 +11,9 @@ enum class Commands { kInsert = 1, kRemove, kFind, kPrint, kQuit };
 
 class HashTableApplication {
  private:
-  static auto NumericPrompt(const std::string &prompt_text) -> unsigned int;
-  static auto Find(const HashTable &hash_table) -> void;
-  static auto Remove(HashTable &hash_table) -> void;
+  static auto NumericPrompt(const std::string& prompt_text) -> unsigned int;
+  static auto Find(const HashTable& hash_table) -> void;
+  static auto Remove(HashTable& hash_table) -> void;
   static auto PrintMenu() -> void;
 
  public:

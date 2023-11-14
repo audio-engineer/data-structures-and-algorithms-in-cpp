@@ -12,11 +12,11 @@
 namespace data_structures_and_algorithms_in_cpp::hash_table {
 
 using FunctionVariants =
-    std::variant<void (*)(const HashTable &), void (*)(HashTable &),
-                 void (*)(const HashTable &, const unsigned int)>;
+    std::variant<void (*)(const HashTable&), void (*)(HashTable&),
+                 void (*)(const HashTable&, const unsigned int)>;
 using CommandDictionary = std::map<Commands, FunctionVariants>;
 
-auto HashTableApplication::NumericPrompt(const std::string &prompt_text)
+auto HashTableApplication::NumericPrompt(const std::string& prompt_text)
     -> unsigned int {
   std::string string_input;
   unsigned int int_input{0};
@@ -29,11 +29,11 @@ auto HashTableApplication::NumericPrompt(const std::string &prompt_text)
       int_input = std::stoi(string_input);
 
       break;
-    } catch (std::out_of_range const &ex) {
+    } catch (std::out_of_range const& ex) {
       std::cout << "Size " << string_input
                 << " is bigger than the allowed size of the type \"int\"."
                 << '\n';
-    } catch (std::invalid_argument const &ex) {
+    } catch (std::invalid_argument const& ex) {
       std::cout << "Invalid input. Please enter a valid integer." << '\n';
     }
   }
@@ -41,12 +41,12 @@ auto HashTableApplication::NumericPrompt(const std::string &prompt_text)
   return int_input;
 }
 
-auto HashTableApplication::Find(const HashTable &hash_table) -> void {
+auto HashTableApplication::Find(const HashTable& hash_table) -> void {
   HashTableUtilities::Find(
       hash_table, NumericPrompt("Enter the value you are searching for: "));
 }
 
-auto HashTableApplication::Remove(HashTable &hash_table) -> void {
+auto HashTableApplication::Remove(HashTable& hash_table) -> void {
   HashTableUtilities::Remove(
       hash_table, NumericPrompt("Enter the value you want to remove: "));
 }
@@ -76,27 +76,27 @@ auto HashTableApplication::Run() -> void {
   while (const auto kCommand = NumericPrompt("Enter a command: ")) {
     switch (static_cast<Commands>(kCommand)) {
       case Commands::kInsert: {
-        const auto kInsertCommand = std::get<void (*)(HashTable &hash_table)>(
+        const auto kInsertCommand = std::get<void (*)(HashTable& hash_table)>(
             command_dictionary[Commands::kInsert]);
         kInsertCommand(hash_table);
         break;
       }
       case Commands::kRemove: {
-        const auto kRemoveCommand = std::get<void (*)(HashTable &hash_table)>(
+        const auto kRemoveCommand = std::get<void (*)(HashTable& hash_table)>(
             command_dictionary[Commands::kRemove]);
         kRemoveCommand(hash_table);
         break;
       }
       case Commands::kFind: {
         const auto kFindCommand =
-            std::get<void (*)(const HashTable &hash_table)>(
+            std::get<void (*)(const HashTable& hash_table)>(
                 command_dictionary[Commands::kFind]);
         kFindCommand(hash_table);
         break;
       }
       case Commands::kPrint: {
         const auto kPrintCommand =
-            std::get<void (*)(const HashTable &hash_table)>(
+            std::get<void (*)(const HashTable& hash_table)>(
                 command_dictionary[Commands::kPrint]);
         kPrintCommand(hash_table);
         break;

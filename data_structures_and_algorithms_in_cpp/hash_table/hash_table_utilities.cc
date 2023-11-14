@@ -15,7 +15,7 @@
 
 namespace data_structures_and_algorithms_in_cpp::hash_table {
 
-auto HashTableUtilities::Insert(HashTable &hash_table) -> void {
+auto HashTableUtilities::Insert(HashTable& hash_table) -> void {
   std::string input;
   unsigned int int_input{0};
 
@@ -29,20 +29,20 @@ auto HashTableUtilities::Insert(HashTable &hash_table) -> void {
   hash_table.Insert(std::move(node));
 }
 
-auto HashTableUtilities::Find(const HashTable &hash_table, unsigned int value)
+auto HashTableUtilities::Find(const HashTable& hash_table, unsigned int value)
     -> void {
   const auto kSearchResult = hash_table.Find(value);
-  Node *item{nullptr};
+  Node* item{nullptr};
 
   std::visit(
-      [&item](auto &data) {
+      [&item](auto& data) {
         using T = std::decay_t<decltype(data)>;
 
-        if constexpr (std::is_same_v<T, Node *>) {
+        if constexpr (std::is_same_v<T, Node*>) {
           item = data;
         }
 
-        if constexpr (std::is_same_v<T, std::tuple<Node *, Node *>>) {
+        if constexpr (std::is_same_v<T, std::tuple<Node*, Node*>>) {
           item = std::get<1>(data);
         }
       },
@@ -59,7 +59,7 @@ auto HashTableUtilities::Find(const HashTable &hash_table, unsigned int value)
             << "" << '\n';
 }
 
-auto HashTableUtilities::Remove(HashTable &hash_table, unsigned int value)
+auto HashTableUtilities::Remove(HashTable& hash_table, unsigned int value)
     -> void {
   const bool kSuccess = hash_table.Remove(value);
 
@@ -70,16 +70,16 @@ auto HashTableUtilities::Remove(HashTable &hash_table, unsigned int value)
   }
 }
 
-auto HashTableUtilities::PrintHashTable(const HashTable &hash_table) -> void {
+auto HashTableUtilities::PrintHashTable(const HashTable& hash_table) -> void {
   const int kColumnWidth{15};
 
   std::cout << std::setw(kColumnWidth) << std::left << "Hash"
             << "Values" << '\n';
 
   size_t index{0};
-  const auto *buckets = &hash_table.GetBuckets();
+  const auto* buckets = &hash_table.GetBuckets();
 
-  for (auto const &bucket : *buckets) {
+  for (auto const& bucket : *buckets) {
     if (bucket->GetFirstNode() == nullptr) {
       std::cout << std::setw(kColumnWidth) << std::left << index << "*" << '\n';
       ++index;
@@ -88,7 +88,7 @@ auto HashTableUtilities::PrintHashTable(const HashTable &hash_table) -> void {
     }
 
     if (bucket->GetFirstNode()->GetNextNode() != nullptr) {
-      auto *current_node = bucket->GetFirstNode();
+      auto* current_node = bucket->GetFirstNode();
 
       std::cout << std::setw(kColumnWidth) << std::left << index;
 
