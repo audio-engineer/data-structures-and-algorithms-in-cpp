@@ -1,6 +1,6 @@
 <component name="ProjectCodeStyleConfiguration">
   <code_scheme name="Project" version="173">
-    <option name="LINE_SEPARATOR" />
+    <option name="LINE_SEPARATOR" value="&#10;" />
     <Objective-C>
       <option name="INDENT_NAMESPACE_MEMBERS" value="0" />
       <option name="INDENT_C_STRUCT_MEMBERS" value="2" />
@@ -65,6 +65,9 @@
         <pair source="c++m" header="" fileNamingConvention="NONE" />
       </extensions>
     </files>
+    <codeStyleSettings language="Latex">
+      <option name="WRAP_LONG_LINES" value="true" />
+    </codeStyleSettings>
     <codeStyleSettings language="ObjectiveC">
       <option name="KEEP_BLANK_LINES_IN_DECLARATIONS" value="1" />
       <option name="KEEP_BLANK_LINES_IN_CODE" value="1" />
