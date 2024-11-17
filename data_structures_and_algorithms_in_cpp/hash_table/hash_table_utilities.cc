@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <iostream>
 #include <memory>
+#include <print>
 #include <string>
 #include <tuple>
 #include <type_traits>
@@ -19,7 +20,7 @@ auto HashTableUtilities::Insert(HashTable& hash_table) -> void {
   std::string input;
   unsigned int int_input{0};
 
-  std::cout << "Enter the value to insert: ";
+  std::print("Enter the value to insert: ");
   std::getline(std::cin, input);
 
   int_input = std::stoi(input);
@@ -49,14 +50,12 @@ auto HashTableUtilities::Find(const HashTable& hash_table, unsigned int value)
       kSearchResult);
 
   if (item == nullptr) {
-    std::cout << "The value " << value
-              << " could not be found in the hash table." << '\n';
+    std::print("The value {} could not be found in the hash table.\n", value);
 
     return;
   }
 
-  std::cout << "Node with value " << value << " found at index "
-            << "" << '\n';
+  std::print("Node with value {} found at index {}.\n", value, 1);
 }
 
 auto HashTableUtilities::Remove(HashTable& hash_table, unsigned int value)
@@ -64,7 +63,7 @@ auto HashTableUtilities::Remove(HashTable& hash_table, unsigned int value)
   const bool kSuccess = hash_table.Remove(value);
 
   if (!kSuccess) {
-    std::cout << "Operation failed." << '\n';
+    std::print("Operation failed.\n");
 
     return;
   }
