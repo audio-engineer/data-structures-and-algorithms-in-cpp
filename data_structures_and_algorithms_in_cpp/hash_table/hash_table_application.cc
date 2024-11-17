@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <map>
+#include <print>
 #include <stdexcept>
 #include <string>
 #include <variant>
@@ -22,7 +23,7 @@ auto HashTableApplication::NumericPrompt(const std::string& prompt_text)
   unsigned int int_input{0};
 
   while (true) {
-    std::cout << prompt_text;
+    std::print("{}", prompt_text);
     std::getline(std::cin, string_input);
 
     try {
@@ -30,11 +31,11 @@ auto HashTableApplication::NumericPrompt(const std::string& prompt_text)
 
       break;
     } catch (std::out_of_range const& ex) {
-      std::cout << "Size " << string_input
-                << " is bigger than the allowed size of the type \"int\"."
-                << '\n';
+      std::print(
+          "Size {} is bigger than the allowed size of the type \"int\".\n",
+          string_input);
     } catch (std::invalid_argument const& ex) {
-      std::cout << "Invalid input. Please enter a valid integer." << '\n';
+      std::print("Invalid input. Please enter a valid integer.\n");
     }
   }
 
@@ -52,14 +53,14 @@ auto HashTableApplication::Remove(HashTable& hash_table) -> void {
 }
 
 auto HashTableApplication::PrintMenu() -> void {
-  std::cout << "Hash table interactive CLI" << '\n'
-            << "Press a number to select one of the following options:" << '\n'
-            << "\t(1) Add" << '\n'
-            << "\t(2) Remove" << '\n'
-            << "\t(3) Find" << '\n'
-            << "\t(4) Print" << '\n'
-            << "\t(5) Quit" << '\n'
-            << '\n';
+  std::print("Hash Table Interactive CLI\n");
+  std::print("Press a number to select one of the following options:\n");
+  std::print("\t(1) Add\n");
+  std::print("\t(2) Remove\n");
+  std::print("\t(3) Find\n");
+  std::print("\t(4) Print\n");
+  std::print("\t(5) Quit\n");
+  std::print("\n");
 }
 
 auto HashTableApplication::Run() -> void {
@@ -105,7 +106,7 @@ auto HashTableApplication::Run() -> void {
         return;
       }
       default:
-        std::cout << "Invalid command." << '\n';
+        std::print("Invalid command.\n");
     }
   }
 }
